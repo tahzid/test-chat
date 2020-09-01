@@ -1934,29 +1934,12 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    created: function created() {
-      var _this = this;
-
-      this.fetchMessages();
-      Echo["private"]("chat").listen("MessageSent", function (e) {
-        _this.messages.push({
-          message: e.message.message,
-          user: e.user
-        });
-      });
-    },
     sendMessage: function sendMessage() {
       this.$emit("messagesent", {
         user: this.user,
         message: this.newMessage
       });
       this.newMessage = "";
-    },
-    addMessage: function addMessage(message) {
-      this.messages.push(message);
-      axios.post("/messages", message).then(function (response) {
-        console.log(response.data);
-      });
     }
   }
 });
@@ -1985,13 +1968,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['messages']
+  props: ["messages"]
 });
 
 /***/ }),
@@ -25821,23 +25799,15 @@ var render = function() {
     "ul",
     { staticClass: "chat" },
     _vm._l(_vm.messages, function(message) {
-      return _c("li", { key: message.id, staticClass: "left clearfix" }, [
+      return _c("li", { key: message.index, staticClass: "left clearfix" }, [
         _c("div", { staticClass: "chat-body clearfix" }, [
           _c("div", { staticClass: "header" }, [
             _c("strong", { staticClass: "primary-font" }, [
-              _vm._v(
-                "\n                    " +
-                  _vm._s(message.user.name) +
-                  "\n                "
-              )
+              _vm._v(_vm._s(message.user.name))
             ])
           ]),
           _vm._v(" "),
-          _c("p", [
-            _vm._v(
-              "\n                " + _vm._s(message.message) + "\n            "
-            )
-          ])
+          _c("p", [_vm._v(_vm._s(message.message))])
         ])
       ])
     }),
@@ -38095,17 +38065,36 @@ Vue.component("chat-form", __webpack_require__(/*! ./components/ChatForm.vue */ 
  */
 
 var app = new Vue({
-  el: "#app" // data: {
-  //     messages: []
-  // },
-  // methods: {
-  //     fetchMessages() {
-  //         axios.get("/messages").then(response => {
-  //             this.messages = response.data;
-  //         });
-  //     },
-  // }
+  el: "#app",
+  data: {
+    messages: []
+  },
+  created: function created() {
+    var _this = this;
 
+    this.fetchMessages();
+    Echo["private"]("chat").listen("MessageSent", function (e) {
+      _this.messages.push({
+        message: e.message.message,
+        user: e.user
+      });
+    });
+  },
+  methods: {
+    fetchMessages: function fetchMessages() {
+      var _this2 = this;
+
+      axios.get("/messages").then(function (response) {
+        _this2.messages = response.data;
+      });
+    },
+    addMessage: function addMessage(message) {
+      this.messages.push(message);
+      axios.post("/messages", message).then(function (response) {
+        console.log(response.data);
+      });
+    }
+  }
 });
 
 /***/ }),

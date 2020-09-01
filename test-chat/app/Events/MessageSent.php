@@ -21,7 +21,7 @@ class MessageSent implements ShouldBroadcast
      *
      * @return void
      */
-    public $uuser;
+    public $user;
     public $message;
     public function __construct(User $user ,Message $message )
     {
