@@ -27,6 +27,15 @@ export default {
   },
 
   methods: {
+    created() {
+      this.fetchMessages();
+      Echo.private("chat").listen("MessageSent", (e) => {
+        this.messages.push({
+          message: e.message.message,
+          user: e.user,
+        });
+      });
+    },
     sendMessage() {
       this.$emit("messagesent", {
         user: this.user,
