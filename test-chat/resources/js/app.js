@@ -16,8 +16,16 @@ window.Vue = require("vue");
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+const files = require.context("./", true, /\.vue$/i);
+files.keys().map(key =>
+    Vue.component(
+        key
+            .split("/")
+            .pop()
+            .split(".")[0],
+        files(key).default
+    )
+);
 
 Vue.component(
     "example-component",
@@ -44,10 +52,10 @@ const app = new Vue({
 
     created() {
         this.fetchMessages();
+        console.log(Echo);
         Echo.private("chat").listen("MessageSent", e => {
-          
             this.messages.push({
-                message: e.message.message,
+                message: e.message,
                 user: e.user
             });
         });
